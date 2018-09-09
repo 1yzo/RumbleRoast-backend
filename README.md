@@ -11,7 +11,7 @@
 |`gender`|String|
 |`sexualOrientation`|String
 |`bio`|String
-|'ethnicity'|String
+|`ethnicity`|String
 
 #### Response
 Success - The User object that was inserted into the database
