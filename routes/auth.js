@@ -9,12 +9,17 @@ const secrets = require('../secrets');
 const router = express.Router();
 
 router.post('/signup', (req, res) => {
-    const { userName, password, name } = req.body;
+    const { userName, password, name, profilePic, gender, sexualOrientation, bio, ethnicity } = req.body;
 
     const user = new User({
         userName,
         password,
-        name
+        name,
+        profilePic,
+        gender,
+        sexualOrientation,
+        bio,
+        ethnicity
     });
 
     user.save()
@@ -32,7 +37,6 @@ router.post('/login', (req, res) => {
                 user.comparePassword(password, (err, isMatch) => {
                     if (isMatch && !err) {
                         const token = jwt.encode(user, secrets.secret);
-                        console.log(token);
                         res.json('JWT ' + token);
                     } else {
                         res.status(500).send('Authentication failed: Wrong password');
