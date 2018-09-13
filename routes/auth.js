@@ -37,7 +37,7 @@ router.post('/login', (req, res) => {
             } else {
                 user.comparePassword(password, (err, isMatch) => {
                     if (isMatch && !err) {
-                        const token = jwt.encode(user, secrets.secret);
+                        const token = jwt.encode( { foo: user.name }, secrets.secret);
                         res.json('JWT ' + token);
                     } else {
                         res.status(500).send('Authentication failed: Wrong password');
