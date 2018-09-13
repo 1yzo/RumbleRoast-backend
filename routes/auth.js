@@ -9,9 +9,10 @@ const secrets = require('../secrets');
 const router = express.Router();
 
 router.post('/signup', (req, res) => {
-    const { userName, password, name, profilePic, gender, sexualOrientation, bio, ethnicity } = req.body;
+    const { email, userName, password, name, profilePic, gender, sexualOrientation, bio, ethnicity } = req.body;
 
     const user = new User({
+        email,
         userName,
         password,
         name,
