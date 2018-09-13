@@ -1,16 +1,35 @@
 const express = require('express');
+const router = express.Router();
 const jwt = require('jwt-simple');
 const passport = require('passport');
 require('../passport')(passport);
 const User = require('../models/user');
 require('../mongo').connect();
 const secrets = require('../secrets');
+const uuid = require('uuid/v4');
+const AWS = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 
-const router = express.Router();
+const config = {
+    accessKeyId: secrets.aws.accessKeyId, secretAccessKey: secrets.aws.secretAccessKey, region: secrets.aws.region
+};
+AWS.config.update(config);
+const s3 = new AWS.S3();
 
-router.post('/signup', (req, res) => {
-    const { email, userName, password, name, profilePic, gender, sexualOrientation, bio, ethnicity } = req.body;
+const upload = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'rumble-roast-images',
+        key: function (req, file, cb) {
+            cb(null, `${uuid()}.jpg`);
+        }
+    })
+});
 
+router.post('/signup', upload.single('profilePic'), (req, res) => {
+    const { email, userName, password, name, gender, sexualOrientation, bio, ethnicity } = req.body;
+    const profilePic = req.file.location;
     const user = new User({
         email,
         userName,
